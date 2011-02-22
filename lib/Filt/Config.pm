@@ -9,7 +9,7 @@ __PACKAGE__->CONF(get_conf());
 
 sub get_conf {
     my $root   = file(__FILE__)->dir->parent->parent;
-    my $config = Config::Tiny->read($root->file('filt.conf'));
+    my $config = Config::Tiny->read($root->file('config.ini'));
 }
 
 1;
