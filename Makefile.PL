@@ -15,4 +15,10 @@ requires 'Web::Scraper';
 requires 'XML::Atom::Feed';
 requires 'XML::Atom::Entry';
 
+
+test_requires 'Test::More';
+test_requires 'File::Find::Rule';
+
+tests 't/*.t';
+
 WriteAll;
