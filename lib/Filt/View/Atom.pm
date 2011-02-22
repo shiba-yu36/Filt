@@ -31,7 +31,7 @@ sub feed {
     my $author = XML::Atom::Person->new;
     $author->name($username);
     $feed->author($author);
-    $feed->icon(sprintf "http://www.hatena.ne.jp/users/%s/%s/profile_s.gif", substr($username, 0, 2), $username);
+    $feed->icon(sprintf "http://cdn-ak.www.st-hatena.com/users/%s/%s/profile_s.gif", substr($username, 0, 2), $username);
 
     $feed;
 }
