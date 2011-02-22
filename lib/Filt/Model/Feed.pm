@@ -1,14 +1,7 @@
 package Filt::Model::Feed;
 use strict;
 use warnings;
-use Data::Dumper;
-sub p { warn Dumper shift; }
 use utf8;
-use Encode;
-use Carp;
-use Class::Accessor::Lite (
-    rw => [ qw/config/ ],
-);
 use URI;
 use Web::Scraper;
 use parent qw/Filt::Config/;

@@ -1,13 +1,10 @@
 package Filt::Model::Filter;
 use strict;
 use warnings;
-use Data::Dumper;
-sub p { warn Dumper shift; }
 use utf8;
 use Encode;
-use Carp;
 use Class::Accessor::Lite (
-    rw => [ qw/config data/ ],
+    rw => [ qw/data/ ],
 );
 use parent qw/Filt::Config/;
 
@@ -76,4 +73,3 @@ sub filter {
 }
 
 1;
-

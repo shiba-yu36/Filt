@@ -1,14 +1,7 @@
 package Filt::View::Atom;
 use strict;
 use warnings;
-use Data::Dumper;
-sub p { warn Dumper shift; }
 use utf8;
-use Encode;
-use Carp;
-use Class::Accessor::Lite (
-    rw => [ qw// ],
-);
 use parent qw/Filt::Config/;
 use Digest::MD5 qw/md5_base64/;
 use XML::Atom::Feed;
