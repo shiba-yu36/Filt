@@ -9,7 +9,6 @@ use Carp;
 use Class::Accessor::Lite (
     rw => [ qw/config data/ ],
 );
-use Lingua::JA::Regular::Unicode qw/alnum_z2h/;
 use parent qw/Filt::Config/;
 
 our $AUTOLOAD;
