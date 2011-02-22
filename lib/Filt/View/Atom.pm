@@ -10,7 +10,7 @@ use Class::Accessor::Lite (
     rw => [ qw// ],
 );
 use parent qw/Filt::Config/;
-use Data::UUID;
+use Digest::MD5 qw/md5_base64/;
 use XML::Atom::Feed;
 use XML::Atom::Entry;
 
@@ -33,12 +33,11 @@ sub feed {
     my $feed = XML::Atom::Feed->new;
 
     $feed->title($username . 'のブックマーク');
-    $feed->id('urn:uuid:' . uuid($web_url)); #これでいいのか…まあuniqだから良いか
+    $feed->id(id($web_url));
 
     my $author = XML::Atom::Person->new;
     $author->name($username);
     $feed->author($author);
-    # TODO 余裕合ったら：link rel="self" href=""
     $feed->icon(sprintf "http://www.hatena.ne.jp/users/%s/%s/profile_s.gif", substr($username, 0, 2), $username);
 
     $feed;
@@ -59,10 +58,7 @@ sub entry {
 
     my $entry = XML::Atom::Entry->new;
     $entry->title($data->{title});
-    $entry->id('urn:uuid:' . uuid($data->{url}));
-
-    $entry->content('Post Body');
-    # TODO artist２つって出来たっけ
+    $entry->id(id($data->{url}));
 
     $entry->updated($data->{timestamp});
 
@@ -77,16 +73,30 @@ sub entry {
 
     my $content = XML::Atom::Content->new;
     $content->type('xhtml');
-    $content->body('<p>foo<b>bar</b>baz</p>');
+    $content->body(comments(@{$data->{comments}}));
     $entry->content($content);
 
     $entry;
 }
 
-sub uuid {
-    my $name = shift;
-    my $ug = Data::UUID->new;
-    $ug->to_string($ug->create_from_name('http://purl.org/atom/ns#', $name));
+sub comments {
+    my @comments = @_;
+    join '<br/>', (
+        map { $_ =~ s#<a[^>]+>(.+?)</a>#$1#sg; $_; }
+        map { $_ =~ s#<span class="tags"[^>]+?>(.+?)</span>#<i>$1</i>#sg; $_; }
+        map { $_ =~ s#<a class="username"[^>]+?>(.+?)</a>#<b>$1</b>#s; $_; }
+        map { $_ =~ s#<span class="twitter.+?</span>##g; $_; }
+        map { $_ =~ s#<span class="click-count.+?</span>##g; $_; }
+        map { $_ =~ s#<span class="retweet-count.+?</span>##g; $_; }
+        map { $_ =~ s#<div class="tweets.+?</div>##g; $_; }
+        map { $_ =~ s#<div class="retweet-images.+?</div>##g; $_; }
+        map { $_ =~ s#<span class="hatena-star.+?</span>##g; $_; }
+        @comments
+    );
+}
+
+sub id {
+    'tag:hatena.ne.jp,2011:bookmark-' . md5_base64(shift);
 }
 
 1;

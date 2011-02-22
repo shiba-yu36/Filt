@@ -11,13 +11,10 @@ use Class::Accessor::Lite (
 );
 use Filt::Model::Feed;
 use Filt::Model::Filter;
-use Cache;
 use lib '..';
 
 sub get_feed {
     my ($class) = @_;
-    #my $cache = Cache->new;
-    #my $res = $cache->get('scrape', 60 * 60 * 48);
     my $res = Filt::Model::Feed->get;
     return undef unless $res;
     Filt::Model::Filter->do($res);

@@ -31,6 +31,8 @@ sub get {
                     'users[]' => 'TEXT';
             process "div.comment > ul.comment > li > span.timestamp",
                     timestamp => ['TEXT', sub { sprintf "%04d-%02d-%02dT00:00:00Z", $_ =~ m#(\d{4})/(\d{2})/(\d{2})# }];
+            process "div.comment > ul.comment > li",
+                    'comments[]' => 'HTML';
         };
     };
     my $res = eval { $scraper->scrape(URI->new($url)) };
@@ -38,6 +40,4 @@ sub get {
     $res->{entries};
 }
 
-
 1;
-
