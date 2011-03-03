@@ -18,7 +18,11 @@ requires 'XML::Atom::Entry';
 
 test_requires 'Test::More';
 test_requires 'File::Find::Rule';
+test_requires 'Plack::Test';
+test_requires 'HTTP::Request::Common';
 
 tests 't/*.t';
+
+auto_include;
 
 WriteAll;

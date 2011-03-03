@@ -7,10 +7,12 @@ use parent qw/Class::Data::Inheritable/;
 __PACKAGE__->mk_classdata('CONF');
 __PACKAGE__->CONF(get_conf());
 use Carp;
+use Project::Libs;
 
 sub get_conf {
-    my $root   = file(__FILE__)->dir->parent->parent;
-    my $config = Config::Tiny->read($root->file('config.ini'));
+    #my $root   = file(__FILE__)->dir->parent->parent;
+    #my $config = Config::Tiny->read($root->file('config.ini'));
+    my $config = Config::Tiny->read('config.ini');
 
     $config->{_}->{username} or Carp::croak "need username in config.ini";
     $config->{_}->{threshold}                 ||= 1;
