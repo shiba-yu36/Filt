@@ -14,6 +14,10 @@ requires 'URI';
 requires 'Web::Scraper';
 requires 'XML::Atom::Feed';
 requires 'XML::Atom::Entry';
+requires 'XML::Feed';
+requires 'XML::Feed::Entry';
+requires 'DateTime';
+requires 'DateTime::Format::W3CDTF';
 
 
 test_requires 'Test::More';

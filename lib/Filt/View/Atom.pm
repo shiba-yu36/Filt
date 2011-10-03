@@ -4,8 +4,10 @@ use warnings;
 use utf8;
 use parent qw/Filt::Config/;
 use Digest::MD5 qw/md5_base64/;
-use XML::Atom::Feed;
-use XML::Atom::Entry;
+use XML::Feed;
+use XML::Feed::Entry;
+use DateTime;
+use DateTime::Format::W3CDTF;
 
 sub render {
     my ($class, $data) = @_;
@@ -23,15 +25,12 @@ sub feed {
     my $username = __PACKAGE__->CONF->{_}->{username};
     my $web_url = 'http://b.hatena.ne.jp/' . $username . '/favorite';
 
-    my $feed = XML::Atom::Feed->new;
+    my $feed = XML::Feed->new('Atom');
 
     $feed->title($username . 'のブックマーク');
     $feed->id(id($web_url));
 
-    my $author = XML::Atom::Person->new;
-    $author->name($username);
-    $feed->author($author);
-    $feed->icon(sprintf "http://cdn-ak.www.st-hatena.com/users/%s/%s/profile_s.gif", substr($username, 0, 2), $username);
+    $feed->author($username);
 
     $feed;
 }
@@ -49,23 +48,18 @@ sub entry {
         fun           => 'おもしろ',
     );
 
-    my $entry = XML::Atom::Entry->new;
+    my $entry = XML::Feed::Entry->new('Atom');
     $entry->title($data->{title});
     $entry->id(id($data->{url}));
 
-    $entry->updated($data->{timestamp});
+    my $w3c = DateTime::Format::W3CDTF->new;
+    $entry->modified($w3c->parse_datetime($data->{timestamp}));
 
-    my $link = XML::Atom::Link->new;
-    $link->href($data->{url});
-    $entry->link($link);
+    $entry->link($data->{url});
 
-    my $category = XML::Atom::Category->new;
-    $category->term($data->{category});
-    $category->label($category_label{$data->{category}});
-    $entry->category($category);
+    $entry->category($category_label{$data->{category}});
 
-    my $content = XML::Atom::Content->new;
-    $content->type('xhtml');
+    my $content = $entry->content;
     $content->body(comments(@{$data->{comments}}));
     $entry->content($content);
 
